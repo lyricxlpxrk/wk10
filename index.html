@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-infinitive Grammar Lab</title>
+<style>
+:root {
+  --navy:#243653;
+  --blue:#5276d8;
+  --light:#eef3ff;
+  --green:#329b79;
+  --orange:#e79a48;
+  --text:#293449;
+  --muted:#78849a;
+  --bg:#f5f7fc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Pretendard","Noto Sans KR",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+}
+button{font-family:inherit;cursor:pointer}
+header{
+  background:linear-gradient(120deg,#243653,#5276d8);
+  color:white;
+  padding:35px 20px 30px;
+}
+.header-inner{max-width:920px;margin:auto}
+.eyebrow{font-size:12px;letter-spacing:2px;opacity:.8}
+header h1{font-size:clamp(26px,5vw,38px);margin:8px 0}
+header p{margin:0;opacity:.9}
+.container{max-width:920px;margin:25px auto 60px;padding:0 16px}
+.progress-card{
+  background:white;border-radius:15px;padding:17px 20px;
+  box-shadow:0 3px 14px #2536530c;margin-bottom:20px
+}
+.progress-info{
+  display:flex;justify-content:space-between;
+  font-size:13px;font-weight:bold;margin-bottom:9px
+}
+.progress-track{
+  height:8px;background:#e9edf5;border-radius:10px;overflow:hidden
+}
+.progress-fill{
+  width:0%;height:100%;background:var(--blue);transition:.3s
+}
+.nav{
+  display:flex;gap:7px;overflow-x:auto;
+  padding:3px 0 13px;margin-bottom:10px
+}
+.nav button{
+  flex:0 0 auto;padding:10px 15px;
+  border:1px solid #e1e6f0;border-radius:10px;
+  background:white;color:#657087;font-size:13px;font-weight:bold
+}
+.nav button.active{
+  background:var(--navy);border-color:var(--navy);color:white
+}
+.section{
+  display:none;background:white;
+  padding:clamp(20px,4vw,35px);
+  border-radius:18px;box-shadow:0 4px 20px #2536530b;
+  animation:appear .3s ease
+}
+.section.active{display:block}
+@keyframes appear{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.section-label{
+  color:var(--blue);font-size:12px;
+  font-weight:bold;letter-spacing:1px
+}
+h2{font-size:25px;margin:5px 0 17px}
+h3{font-size:18px;margin:20px 0 10px}
+p{margin:8px 0}
+.callout{
+  background:var(--light);border-left:4px solid var(--blue);
+  border-radius:8px;padding:15px 18px;margin:17px 0
+}
+.callout.green{background:#edf8f3;border-color:var(--green)}
+.callout.orange{background:#fff6e9;border-color:var(--orange)}
+.keyword{color:var(--blue);font-weight:800}
+.example{
+  border:1px solid #e7ebf3;border-radius:12px;
+  padding:15px 17px;margin:12px 0
+}
+.example .english{
+  font-size:18px;font-weight:bold;color:var(--navy)
+}
+.example .korean{color:var(--muted);font-size:14px}
+.tag{
+  display:inline-block;font-size:11px;font-weight:bold;
+  background:#edf1ff;color:var(--blue);
+  padding:3px 9px;border-radius:20px;margin-bottom:6px
+}
+.structure{
+  background:#f6f8fc;border-radius:10px;
+  padding:15px;margin:12px 0;text-align:center;font-weight:bold
+}
+.structure span{
+  display:inline-block;padding:5px 10px;
+  margin:3px;border-radius:7px;background:#e8edfa
+}
+.structure .target{background:#dce6ff;color:#3156b0}
+.tip{font-size:13px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}
+th,td{padding:11px 9px;border-bottom:1px solid #e8ecf3;text-align:left}
+th{background:#f4f6fb}
+.quiz-question{
+  background:#f7f8fc;padding:18px;border-radius:12px;margin:18px 0
+}
+.question-number{color:var(--blue);font-size:12px;font-weight:bold}
+.question-text{
+  font-size:17px;font-weight:bold;margin:8px 0 13px;
+  overflow-wrap:anywhere
+}
+.question-text u{
+  text-decoration-color:var(--blue);
+  text-decoration-thickness:3px;text-underline-offset:4px
+}
+.choice-list{display:grid;gap:9px}
+.choice{
+  border:1px solid #dfe5ef;border-radius:9px;
+  padding:11px 14px;background:white;
+  text-align:left;color:var(--text);font-size:14px
+}
+.choice:hover:not(:disabled){
+  border-color:var(--blue);background:#f4f7ff
+}
+.choice.correct{
+  border-color:var(--green);background:#eaf7f1;color:#237858
+}
+.choice.wrong{
+  border-color:#dc7777;background:#fff0f0;color:#b44444
+}
+.choice:disabled{cursor:default}
+.feedback{
+  display:none;padding:12px;margin-top:12px;
+  border-radius:8px;font-size:14px
+}
+.feedback.show{display:block}
+.feedback.good{background:#eaf7f1;color:#237858}
+.feedback.bad{background:#fff0f0;color:#b44444}
+.btn-row{
+  display:flex;justify-content:space-between;
+  gap:10px;margin-top:25px
+}
+.btn{
+  border:none;border-radius:10px;padding:12px 22px;
+  font-size:14px;font-weight:bold
+}
+.btn-primary{background:var(--blue);color:white}
+.btn-secondary{background:#edf0f6;color:#526079}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.result{text-align:center;padding:25px 10px}
+.score{
+  font-size:55px;font-weight:800;color:var(--blue);margin:10px
+}
+.result-icon{font-size:48px}
+footer{text-align:center;color:#98a1b1;font-size:12px;padding:25px}
+@media(max-width:500px){
+  header{padding:27px 18px}
+  .section{padding:21px 17px}
+  h2{font-size:22px}
+  .btn{padding:11px 15px}
+  table{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="header-inner">
+  <div class="eyebrow">ENGLISH GRAMMAR LAB · MIDDLE SCHOOL 3</div>
+  <h1>To-infinitive Lab 🔬</h1>
+  <p>to부정사의 명사적 용법을 정복해 보자!</p>
+ </div>
+</header>
+
+<div class="container">
+
+ <div class="progress-card">
+  <div class="progress-info">
+   <span>MY LEARNING JOURNEY</span>
+   <span id="progressText">0 / 6 단계</span>
+  </div>
+  <div class="progress-track">
+   <div class="progress-fill" id="progressFill"></div>
+  </div>
+ </div>
+
+ <nav class="nav" id="navigation">
+  <button class="active" data-index="0">01 개념</button>
+  <button data-index="1">02 주어</button>
+  <button data-index="2">03 목적어</button>
+  <button data-index="3">04 보어</button>
+  <button data-index="4">05 연습</button>
+  <button data-index="5">06 결과</button>
+ </nav>
+
+ <!-- STEP 1 -->
+ <section class="section active" id="step0">
+  <div class="section-label">STEP 01 · UNDERSTAND</div>
+  <h2>to부정사의 명사적 용법이란?</h2>
+  <p>to부정사는 <b>to + 동사원형</b>의 형태를 가진 표현이야.</p>
+  <p>문장에서 명사처럼 쓰이면 '~하는 것', '~하기'라고 해석해.</p>
+
+  <div class="callout">
+   <b>명사적 용법의 세 가지 역할</b>
+   <p>① 주어: '~하는 것은'</p>
+   <p>② 목적어: '~하는 것을'</p>
+   <p>③ 보어: '~하는 것이다'</p>
+  </div>
+
+  <div class="example">
+   <span class="tag">주어</span>
+   <div class="english"><span class="keyword">To exercise</span> is important.</div>
+   <div class="korean">운동하는 것은 중요하다.</div>
+  </div>
+
+  <div class="example">
+   <span class="tag">목적어</span>
+   <div class="english">I want <span class="keyword">to exercise.</span></div>
+   <div class="korean">나는 운동하기를 원한다.</div>
+  </div>
+
+  <div class="example">
+   <span class="tag">보어</span>
+   <div class="english">My hobby is <span class="keyword">to exercise.</span></div>
+   <div class="korean">나의 취미는 운동하는 것이다.</div>
+  </div>
+
+  <div class="btn-row">
+   <span></span>
+   <button class="btn btn-primary" onclick="go(1)">주어 학습하기 →</button>
+  </div>
+ </section>
+
+ <!-- STEP 2 -->
+ <section class="section" id="step1">
+  <div class="section-label">STEP 02 · SUBJECT</div>
+  <h2>① 주어로 쓰이는 to부정사</h2>
+
+  <div class="callout">
+   <b>의미: ~하는 것은 / ~하기는</b>
+   <p>to부정사구 전체가 문장의 주어 역할을 해.</p>
+  </div>
+
+  <div class="structure">
+   <span class="target">To + 동사원형</span>
+   <span>+</span><span>동사</span><span>+</span><span>나머지</span>
+  </div>
+
+  <div class="example">
+   <div class="english"><span class="keyword">To learn English</span> is fun.</div>
+   <div class="korean">영어를 배우는 것은 재미있다.</div>
+  </div>
+
+  <div class="example">
+   <div class="english"><span class="keyword">To help others</span> is important.</div>
+   <div class="korean">다른 사람들을 돕는 것은 중요하다.</div>
+  </div>
+
+  <h3>가주어 it을 사용하는 문장</h3>
+
+  <div class="callout green">
+   주어가 길어지면 영어에서는 가주어 it을 문장 맨 앞에 놓고, 진짜 주어인 to부정사를 뒤로 보낼 수 있어.
+  </div>
+
+  <div class="structure">
+   <span>It</span><span>+</span><span>be동사</span><span>+</span>
+   <span>형용사</span><span>+</span><span class="target">to + 동사원형</span>
+  </div>
+
+  <div class="example">
+   <div class="english">It is important <span class="keyword">to exercise every day.</span></div>
+   <div class="korean">매일 운동하는 것은 중요하다.</div>
+   <p class="tip">It = 가주어 / to exercise every day = 진주어</p>
+  </div>
+
+  <div class="example">
+   <div class="english">It is difficult <span class="keyword">to learn a new language.</span></div>
+   <div class="korean">새로운 언어를 배우는 것은 어렵다.</div>
+   <p class="tip">It = 가주어 / to learn a new language = 진주어</p>
+  </div>
+
+  <div class="example">
+   <div class="english">It is fun <span class="keyword">to play with friends.</span></div>
+   <div class="korean">친구들과 노는 것은 재미있다.</div>
+   <p class="tip">It = 가주어 / to play with friends = 진주어</p>
+  </div>
+
+  <div class="callout orange">
+   <b>시험 포인트!</b>
+   <p>가주어 it은 해석하지 않고, 뒤에 나오는 to부정사가 진짜 주어야.</p>
+   <p>It is important to study English.</p>
+   <p>→ 영어를 공부하는 것은 중요하다.</p>
+  </div>
+
+  <div class="btn-row">
+   <button class="btn btn-secondary" onclick="go(0)">← 이전</button>
+   <button class="btn btn-primary" onclick="go(2)">목적어 학습하기 →</button>
+  </div>
+ </section>
+
+ <!-- STEP 3 -->
+ <section class="section" id="step2">
+  <div class="section-label">STEP 03 · OBJECT</div>
+  <h2>② 목적어로 쓰이는 to부정사</h2>
+
+  <div class="callout">
+   <b>의미: ~하는 것을 / ~하기를</b>
+   <p>to부정사가 동사 뒤에서 목적어 역할을 해.</p>
+  </div>
+
+  <div class="structure">
+   <span>주어</span><span>+</span><span>동사</span><span>+</span>
+   <span class="target">to + 동사원형</span>
+  </div>
+
+  <h3>to부정사를 목적어로 사용하는 동사</h3>
+  <table>
+   <tr><th>동사</th><th>의미</th></tr>
+   <tr><td>want to</td><td>~하기를 원하다</td></tr>
+   <tr><td>hope to</td><td>~하기를 바라다</td></tr>
+   <tr><td>plan to</td><td>~할 계획이다</td></tr>
+   <tr><td>decide to</td><td>~하기로 결정하다</td></tr>
+   <tr><td>promise to</td><td>~하기로 약속하다</td></tr>
+   <tr><td>learn to</td><td>~하는 법을 배우다</td></tr>
+  </table>
+
+  <div class="example">
+   <div class="english">I want <span class="keyword">to be a teacher.</span></div>
+   <div class="korean">나는 선생님이 되기를 원한다.</div>
+  </div>
+
+  <div class="example">
+   <div class="english">She decided <span class="keyword">to study harder.</span></div>
+   <div class="korean">그녀는 더 열심히 공부하기로 결정했다.</div>
+  </div>
+
+  <h3>주의! 동명사를 목적어로 취하는 동사</h3>
+
+  <div class="callout orange">
+   모든 동사가 to부정사를 목적어로 사용하는 것은 아니야.
+   <p>enjoy, finish와 같은 동사는 목적어로 동명사(-ing)를 사용해.</p>
+  </div>
+
+  <table>
+   <tr><th>동사</th><th>올바른 형태</th><th>의미</th></tr>
+   <tr><td>enjoy</td><td>enjoy doing</td><td>~하는 것을 즐기다</td></tr>
+   <tr><td>finish</td><td>finish doing</td><td>~하는 것을 끝내다</td></tr>
+  </table>
+
+  <div class="example">
+   <div class="english">I enjoy <span class="keyword">playing soccer.</span></div>
+   <div class="korean">나는 축구하는 것을 즐긴다.</div>
+  </div>
+
+  <div class="example">
+   <div class="english">She finished <span class="keyword">reading the book.</span></div>
+   <div class="korean">그녀는 책을 읽는 것을 끝냈다.</div>
+  </div>
+
+  <div class="callout green">
+   <b>기억하기!</b>
+   <p>enjoy to play (X) → enjoy playing (O)</p>
+   <p>finish to read (X) → finish reading (O)</p>
+  </div>
+
+  <div class="btn-row">
+   <button class="btn btn-secondary" onclick="go(1)">← 이전</button>
+   <button class="btn btn-primary" onclick="go(3)">보어 학습하기 →</button>
+  </div>
+ </section>
+
+ <!-- STEP 4 -->
+ <section class="section" id="step3">
+  <div class="section-label">STEP 04 · COMPLEMENT</div>
+  <h2>③ 보어로 쓰이는 to부정사</h2>
+
+  <div class="callout">
+   <b>의미: ~하는 것이다</b>
+   <p>to부정사가 주어의 의미를 보충 설명하는 주격 보어 역할을 해.</p>
+  </div>
+
+  <div class="structure">
+   <span>주어</span><span>+</span><span>be동사</span>
+   <span>+</span><span class="target">to + 동사원형</span>
+  </div>
+
+  <div class="example">
+   <div class="english">My dream is <span class="keyword">to travel around the world.</span></div>
+   <div class="korean">나의 꿈은 세계를 여행하는 것이다.</div>
+  </div>
+
+  <div class="example">
+   <div class="english">Her job is <span class="keyword">to help sick people.</span></div>
+   <div class="korean">그녀의 직업은 아픈 사람들을 돕는 것이다.</div>
+  </div>
+
+  <div class="example">
+   <div class="english">My goal is <span class="keyword">to become a scientist.</span></div>
+   <div class="korean">나의 목표는 과학자가 되는 것이다.</div>
+  </div>
+
+  <div class="callout green">
+   <b>주어와 보어 구별하기</b>
+   <p>To read books is interesting.</p>
+   <p>→ To read books = 주어</p>
+   <hr>
+   <p>My hobby is to read books.</p>
+   <p>→ to read books = 보어</p>
+  </div>
+
+  <div class="btn-row">
+   <button class="btn btn-secondary" onclick="go(2)">← 이전</button>
+   <button class="btn btn-primary" onclick="go(4)">연습 문제 풀기 →</button>
+  </div>
+ </section>
+
+ <!-- STEP 5 -->
+ <section class="section" id="step4">
+  <div class="section-label">STEP 05 · PRACTICE</div>
+  <h2>문장 속 역할을 찾아보자!</h2>
+  <p>총 12문제야. 정답을 고르면 즉시 피드백을 확인할 수 있어.</p>
+
+  <div class="callout">
+   <b>문제 유형</b>
+   <p>1~6번: to부정사의 주어·목적어·보어 구분</p>
+   <p>7~10번: 가주어 it 문장 분석</p>
+   <p>11~12번: 동명사와의 구별</p>
+  </div>
+
+  <div id="quizArea"></div>
+
+  <div class="btn-row">
+   <button class="btn btn-secondary" onclick="go(3)">← 개념 복습</button>
+   <button class="btn btn-primary" id="finishQuiz" onclick="finishPractice()" disabled>결과 확인하기 →</button>
+  </div>
+ </section>
+
+ <!-- STEP 6 -->
+ <section class="section" id="step5">
+  <div class="section-label">STEP 06 · MY RESULT</div>
+
+  <div class="result">
+   <div class="result-icon" id="resultIcon">🏆</div>
+   <h2>학습을 완료했어!</h2>
+   <p>to부정사 명사적 용법 학습 결과</p>
+   <div class="score" id="scoreDisplay">0 / 12</div>
+   <p id="resultMessage"></p>
+  </div>
+
+  <div class="callout">
+   <b>핵심 개념 다시 확인하기</b>
+   <table>
+    <tr><th>역할</th><th>의미</th><th>기본 구조</th></tr>
+    <tr><td>주어</td><td>~하는 것은</td><td>To V + 동사</td></tr>
+    <tr><td>목적어</td><td>~하는 것을</td><td>동사 + to V</td></tr>
+    <tr><td>보어</td><td>~하는 것이다</td><td>주어 + be + to V</td></tr>
+   </table>
+  </div>
+
+  <div class="callout green">
+   <b>동명사를 목적어로 취하는 동사</b>
+   <p>enjoy, finish + -ing</p>
+  </div>
+
+  <div class="btn-row">
+   <button class="btn btn-secondary" onclick="go(0)">처음으로</button>
+   <button class="btn btn-primary" onclick="restart()">다시 학습하기 ↻</button>
+  </div>
+ </section>
+
+</div>
+
+<footer>ENGLISH GRAMMAR LAB · To-infinitive Noun Usage</footer>
+
+<script>
+const sections=document.querySelectorAll(".section");
+const navButtons=document.querySelectorAll(".nav button");
+
+let currentStep=0;
+let answers={};
+let completed=new Set();
+
+const questions=[
+ {
+  type:"역할 구분",
+  sentence:"<u>To play the piano</u> is difficult.",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"to play the piano가 문장 맨 앞에서 주어 역할을 해. '~하는 것은'으로 해석해."
+ },
+ {
+  type:"역할 구분",
+  sentence:"I want <u>to buy a new computer.</u>",
+  choices:["주어","목적어","보어"],
+  answer:1,
+  explanation:"want 뒤에서 '~하는 것을 원하다'라는 의미로 목적어 역할을 해."
+ },
+ {
+  type:"역할 구분",
+  sentence:"My dream is <u>to become a doctor.</u>",
+  choices:["주어","목적어","보어"],
+  answer:2,
+  explanation:"to become a doctor가 주어 My dream을 설명하는 주격 보어야."
+ },
+ {
+  type:"역할 구분",
+  sentence:"<u>To help my friends</u> makes me happy.",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"to help my friends 전체가 문장의 주어야."
+ },
+ {
+  type:"역할 구분",
+  sentence:"She decided <u>to join the school club.</u>",
+  choices:["주어","목적어","보어"],
+  answer:1,
+  explanation:"decided 뒤에 위치하여 '~하기로 결정했다'라는 의미의 목적어야."
+ },
+ {
+  type:"역할 구분",
+  sentence:"His plan is <u>to travel abroad.</u>",
+  choices:["주어","목적어","보어"],
+  answer:2,
+  explanation:"to travel abroad가 주어 His plan을 설명하는 보어야."
+ },
+ {
+  type:"가주어 it",
+  sentence:"It is important <u>to exercise every day.</u>",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"It은 가주어이고 to exercise every day가 진주어야. to부정사구가 문장의 주어 역할을 해."
+ },
+ {
+  type:"가주어 it",
+  sentence:"It is difficult <u>to solve this problem.</u>",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"to solve this problem이 진주어야. It은 가주어로 쓰였어."
+ },
+ {
+  type:"가주어 it",
+  sentence:"It is fun <u>to play with friends.</u>",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"to play with friends가 진주어이므로 명사적 용법의 주어야."
+ },
+ {
+  type:"가주어 it",
+  sentence:"It is exciting <u>to visit new places.</u>",
+  choices:["주어","목적어","보어"],
+  answer:0,
+  explanation:"to visit new places가 진주어이며, It은 가주어야."
+ },
+ {
+  type:"동명사와의 구별",
+  sentence:"I enjoy _____ soccer with my friends.",
+  choices:["to play","playing","play"],
+  answer:1,
+  explanation:"enjoy는 동명사를 목적어로 취하는 동사야. enjoy playing이 올바른 표현이야."
+ },
+ {
+  type:"동명사와의 구별",
+  sentence:"She finished _____ the book.",
+  choices:["to read","read","reading"],
+  answer:2,
+  explanation:"finish는 동명사를 목적어로 취해. finished reading이 올바른 표현이야."
+ }
+];
+
+function go(index){
+ currentStep=index;
+
+ sections.forEach((s,i)=>{
+  s.classList.toggle("active",i===index);
+ });
+
+ navButtons.forEach((b,i)=>{
+  b.classList.toggle("active",i===index);
+ });
+
+ if(index>0)completed.add(index-1);
+
+ updateProgress();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+navButtons.forEach(button=>{
+ button.addEventListener("click",()=>{
+  const index=Number(button.dataset.index);
+  if(index<=currentStep||completed.has(index-1)||index===0){
+   go(index);
+  }
+ });
+});
+
+function updateProgress(){
+ const count=currentStep===5?6:currentStep;
+ document.getElementById("progressText").textContent=count+" / 6 단계";
+ document.getElementById("progressFill").style.width=(count/6*100)+"%";
+}
+
+function renderQuiz(){
+ const area=document.getElementById("quizArea");
+ area.innerHTML="";
+
+ questions.forEach((q,i)=>{
+  const div=document.createElement("div");
+  div.className="quiz-question";
+
+  const number=document.createElement("div");
+  number.className="question-number";
+  number.textContent="QUESTION "+(i+1)+" · "+q.type;
+
+  const sentence=document.createElement("div");
+  sentence.className="question-text";
+  sentence.innerHTML=q.sentence;
+
+  const choices=document.createElement("div");
+  choices.className="choice-list";
+
+  q.choices.forEach((choice,j)=>{
+   const btn=document.createElement("button");
+   btn.className="choice";
+   btn.textContent=(j+1)+". "+choice;
+   btn.onclick=()=>selectAnswer(i,j);
+   choices.appendChild(btn);
+  });
+
+  const feedback=document.createElement("div");
+  feedback.className="feedback";
+  feedback.id="feedback"+i;
+
+  div.append(number,sentence,choices,feedback);
+  area.appendChild(div);
+ });
+}
+
+function selectAnswer(questionIndex,selected){
+ if(answers[questionIndex]!==undefined)return;
+
+ answers[questionIndex]=selected;
+
+ const q=questions[questionIndex];
+ const div=document.querySelectorAll(".quiz-question")[questionIndex];
+ const buttons=div.querySelectorAll(".choice");
+ const feedback=document.getElementById("feedback"+questionIndex);
+ const correct=selected===q.answer;
+
+ buttons.forEach((btn,i)=>{
+  btn.disabled=true;
+  if(i===q.answer)btn.classList.add("correct");
+  if(i===selected&&!correct)btn.classList.add("wrong");
+ });
+
+ feedback.className="feedback show "+(correct?"good":"bad");
+
+ feedback.textContent=
+  (correct?"✓ 정답이야! ":"✗ 아쉬워! 정답은 "+q.choices[q.answer]+"이야. ")
+  +q.explanation;
+
+ document.getElementById("finishQuiz").disabled=
+  Object.keys(answers).length!==questions.length;
+}
+
+function finishPractice(){
+ const score=questions.reduce((total,q,i)=>{
+  return total+(answers[i]===q.answer?1:0);
+ },0);
+
+ document.getElementById("scoreDisplay").textContent=
+  score+" / "+questions.length;
+
+ let message,icon;
+
+ if(score===questions.length){
+  message="완벽해! to부정사의 명사적 용법을 모두 이해했어.";
+  icon="🏆";
+ }else if(score>=10){
+  message="정말 잘했어! 조금만 더 복습하면 완벽해질 거야.";
+  icon="🌟";
+ }else if(score>=7){
+  message="좋은 시도야! 틀린 문제의 설명을 다시 확인해 보자.";
+  icon="📚";
+ }else{
+  message="괜찮아! 개념 학습으로 돌아가서 다시 도전해 보자.";
+  icon="💪";
+ }
+
+ document.getElementById("resultMessage").textContent=message;
+ document.getElementById("resultIcon").textContent=icon;
+
+ completed.add(4);
+ completed.add(5);
+ go(5);
+}
+
+function restart(){
+ answers={};
+ completed.clear();
+ document.getElementById("finishQuiz").disabled=true;
+ renderQuiz();
+ go(0);
+}
+
+renderQuiz();
+updateProgress();
+</script>
+
+</body>
+</html>
